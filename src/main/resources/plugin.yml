@@ -1,0 +1,18 @@
+name: CyanchPlugin
+version: 1.0
+main: com.gmail.cyanthundermc.Cyanch1.CyanchPlugin
+commands:
+  showhand:
+    description: Reveals item in hand.
+    usage: /showhand
+  hiderain:
+    description: Clears the Weather on the Player's End.
+    usage: /hiderain
+    aliases: [clearrain, clearweather]
+  position:
+    description: Tell everyone where you are!
+    usage: /position
+    aliases: [pos]
+  map:
+    description: Gives Dynmap Link.
+    usage: /map
