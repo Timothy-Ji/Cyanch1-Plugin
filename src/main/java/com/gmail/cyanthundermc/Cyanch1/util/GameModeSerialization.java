@@ -13,6 +13,6 @@ public class GameModeSerialization {
                 return gameMode;
         }
 
-        return GameMode.SURVIVAL;
+        return null;
     }
 }

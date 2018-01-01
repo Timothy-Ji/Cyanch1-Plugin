@@ -1,6 +1,11 @@
 package com.gmail.cyanthundermc.Cyanch1.util;
 
+import com.gmail.cyanthundermc.Cyanch1.CyanchPlugin;
 import com.gmail.cyanthundermc.Cyanch1.lib.BukkitSerialization;
+import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayer;
+import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorlds;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
@@ -36,16 +41,22 @@ public class PlayerSerialization {
      * @param serializedPlayer What the player is being modified with
      * @return Creates a SerializedPlayer off the previous data.
      */
-    public SerializedPlayer applySerializedPlayerrToPlayer(Player player, SerializedPlayer serializedPlayer) {
+    public static SerializedPlayer applySerializedPlayerToPlayer(Player player, SerializedPlayer serializedPlayer) {
         SerializedPlayer toReturn = getSerializedPlayerFromPlayer(player);
 
         try {
             player.getInventory().setExtraContents(BukkitSerialization.itemStackArrayFromBase64(serializedPlayer.getInventory()));
             player.getInventory().setArmorContents(BukkitSerialization.itemStackArrayFromBase64(serializedPlayer.getArmor()));
             player.getInventory().setItemInOffHand(BukkitSerialization.itemStackArrayFromBase64(serializedPlayer.getOffhand())[0]);
-            player.teleport(LocationSerialization.getLocationFromString(serializedPlayer.getLocation()), PlayerTeleportEvent.TeleportCause.PLUGIN);
+            Location loc = LocationSerialization.getLocationFromString(serializedPlayer.getLocation());
+            player.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
             player.setExp(serializedPlayer.getExperience());
-            player.setGameMode(GameModeSerialization.getGameModeFromString(serializedPlayer.getGameMode()));
+            GameMode gameMode = GameModeSerialization.getGameModeFromString(serializedPlayer.getGameMode());
+            if (gameMode != null) {
+                player.setGameMode(gameMode);
+            } else {
+                player.setGameMode(ServerWorlds.getServerWorld(loc.getWorld()).getDefaultGameMode());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
