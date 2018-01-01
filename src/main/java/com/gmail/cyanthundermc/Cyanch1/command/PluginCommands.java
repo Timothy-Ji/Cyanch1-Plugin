@@ -19,6 +19,9 @@ public class PluginCommands {
                 "pos"
         }));
         AddCommand("map", new CommandMap());
+
+        AddCommand("serverworld", new CommandServerWorld());
+        AddCommand("creative", new CommandCreative());
     }
 
     private static void AddCommand(String name, CommandExecutor executor, List<String> aliases) {

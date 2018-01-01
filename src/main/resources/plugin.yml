@@ -16,3 +16,9 @@ commands:
   map:
     description: Gives Dynmap Link.
     usage: /map
+  serverworld:
+    description: Switch between server worlds!
+    usage: /serverworld <creative, survival>
+  creative:
+    description: Set of Creative Commands that can only be used in the Creative Server World!
+    usage: /creative tp <target player> OR /creative tp <x> <y> <z> OR /creative gamemode <mode> OR /creative world <flat, void>

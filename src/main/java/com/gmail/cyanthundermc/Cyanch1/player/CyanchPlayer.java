@@ -95,12 +95,12 @@ public class CyanchPlayer {
             } else {
                 //get from database.
                 SerializedPlayer serializedPlayer = new SerializedPlayer(
-                        (String)plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "INVENTORY_CONTENTS"),
-                        (String)plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "ARMOR_CONTENTS"),
-                        (String)plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "OFF_HAND"),
-                        (String)plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "LOCATION"),
-                        (float)plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "EXPERIENCE"),
-                        (String)plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "GAMEMODE")
+                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "INVENTORY_CONTENTS"),
+                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "ARMOR_CONTENTS"),
+                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "OFF_HAND"),
+                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "LOCATION"),
+                        (float) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "EXPERIENCE"),
+                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "GAMEMODE")
                 );
 
                 old = PlayerSerialization.applySerializedPlayerToPlayer(player, serializedPlayer);
@@ -109,7 +109,24 @@ public class CyanchPlayer {
 
         //set to cache & database.
         serverWorldPlayerData.put(sourceServerWorld, old);
+
+        plugin.sqlLib.getDatabase((SQLLite.player_database_name)).executeStatement(
+                "INSERT OR REPLACE INTO player_" + sourceServerWorld.getDb_table_name() + "(UUID, INVENTORY_CONTENTS, ARMOR_CONTENTS, OFF_HAND, LOCATION, EXPERIENCE, GAMEMODE)" +
+                "VALUES (" +
+                        getUniqueId() + "," +
+                        old.getInventory() + "," +
+                        old.getArmor() + "," +
+                        old.getOffhand() + "," +
+                        old.getLocation() + "," +
+                        old.getExperience() + "," +
+                        old.getGameMode() +
+                ");"
+        );
+
+        //welcome!
         serverWorld.AnnounceToPlayer(player, "Welcome!");
+
+        //update display stuff
         player.setPlayerListName(getWorldServerPrefix() + " " + getColoredName());
     }
 }
