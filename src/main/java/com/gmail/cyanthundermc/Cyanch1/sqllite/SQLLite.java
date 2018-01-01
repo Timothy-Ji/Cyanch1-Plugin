@@ -17,15 +17,16 @@ public class SQLLite {
                         "INVENTORY_CONTENTS TEXT," +
                         "ARMOR_CONTENTS TEXT," +
                         "LOCATION TEXT," +
-                        "EXPERIENCE FLOAT" +
-                        "GAMEMODE TEXT," +
+                        "EXPERIENCE FLOAT," +
+                        "GAMEMODE TEXT" +
                         ");" +
                         "CREATE TABLE IF NOT EXISTS " + player_db_table_survival_data_name + "(" +
                         "UUID TEXT NOT NULL," +
                         "INVENTORY_CONTENTS TEXT," +
                         "ARMOR_CONTENTS TEXT," +
                         "LOCATION TEXT," +
-                        "EXPERIENCE FLOAT" +
+                        "EXPERIENCE FLOAT," +
+                        "GAMEMODE TEXT" +
                         ")"
         );
     }
