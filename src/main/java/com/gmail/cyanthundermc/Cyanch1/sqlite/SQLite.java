@@ -1,9 +1,9 @@
-package com.gmail.cyanthundermc.Cyanch1.sqllite;
+package com.gmail.cyanthundermc.Cyanch1.sqlite;
 
 import com.gmail.cyanthundermc.Cyanch1.CyanchPlugin;
 import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorld;
 
-public class SQLLite {
+public class SQLite {
 
     private static CyanchPlugin plugin = CyanchPlugin.INSTANCE;
     public static String player_database_name = "CyanchS1_PlayerDB";
@@ -13,7 +13,7 @@ public class SQLLite {
         String createStatement = "";
         for (ServerWorld serverWorld : ServerWorld.values()) {
             createStatement +=
-                    "CREATE TABLE IF NOT EXISTS player_"  + serverWorld.getDb_table_name() + "(" +
+            "CREATE TABLE IF NOT EXISTS player_" + serverWorld.getDb_table_name() + "(" +
                     "UUID TEXT NOT NULL," +
                     "INVENTORY_CONTENTS TEXT," +
                     "ARMOR_CONTENTS TEXT," +
@@ -23,9 +23,11 @@ public class SQLLite {
                     "GAMEMODE TEXT" +
                     ");"
             ;
-    }
-        plugin.sqlLib.initializeDatabase(player_database_name,
+        }
+        plugin.sqlLib.initializeDatabase(
+                player_database_name,
                 createStatement
         );
+
     }
 }
