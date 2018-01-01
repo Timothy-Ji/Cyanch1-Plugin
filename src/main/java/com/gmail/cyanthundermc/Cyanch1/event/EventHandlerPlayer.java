@@ -122,10 +122,12 @@ public class EventHandlerPlayer implements Listener {
     }
 
     @EventHandler
-    public void onPortalCreate(PortalCreateEvent event) {
+    public void onPortal(PlayerPortalEvent event) {
+        CyanchPlayer player = CyanchPlayers.getCyanchPlayer((Player) event.getPlayer());
         //Only allow portals to work in survival
-        if (ServerWorlds.getServerWorld(event.getWorld()) != ServerWorld.SURVIVAL) {
+        if (!player.isInSurvivalWorld()) {
             event.setCancelled(true);
+            player.getServerWorld().AnnounceToPlayer(player.bukkit(), "You are not allowed to do that in this world!");
         }
     }
 
