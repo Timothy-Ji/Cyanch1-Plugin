@@ -38,11 +38,19 @@ public class CyanchPlayer {
         return ServerWorlds.getServerWorld(player.getWorld());
     }
 
+    public boolean isInServerWorld(ServerWorld serverWorld) {
+        return getServerWorld() == serverWorld;
+    }
+
     public boolean isInSurvivalWorld() {
-        return ServerWorlds.getServerWorld(player.getWorld()) == ServerWorld.SURVIVAL;
+        return getServerWorld() == ServerWorld.SURVIVAL;
     }
 
     public boolean isInCreativeWorld() {
-        return ServerWorlds.getServerWorld(player.getWorld()) == ServerWorld.CREATIVE;
+        return getServerWorld() == ServerWorld.CREATIVE;
+    }
+
+    public void TransferToServerWorld() {
+
     }
 }
