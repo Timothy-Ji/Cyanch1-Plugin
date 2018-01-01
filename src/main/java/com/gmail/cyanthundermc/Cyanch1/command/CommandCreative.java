@@ -18,7 +18,7 @@ public class CommandCreative extends CyanchCommand {
         if (bp.getBoolean()) {
             CyanchPlayer player = bp.getCyanchPlayer();
             if (!player.isInCreativeWorld()) {
-                ServerWorld.CREATIVE.AnnounceToPlayer(player.bukkit(), "You are not in this world!");
+                ServerWorld.CREATIVE.AnnounceToPlayer(player.bukkit(), "You are not in the creative world!");
                 return true;
             }
 
