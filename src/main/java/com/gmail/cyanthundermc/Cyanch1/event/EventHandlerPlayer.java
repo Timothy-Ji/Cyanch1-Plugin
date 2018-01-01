@@ -48,37 +48,16 @@ public class EventHandlerPlayer implements Listener {
         ChatColor color = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(player).getColor();
         event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
         event.setFormat(plugin.getCyanchPlayer(player).CreateChatFormat("%2$s"));
-
-        if (player.isOp()) {
-            if (event.getMessage().startsWith("op.invsee")) {
-                event.setCancelled(true);
-                String args[] = event.getMessage().split(" ");
-                if (args.length >= 2) {
-                    Player target = Bukkit.getPlayerExact(args[1]);
-                    if (target != null) {
-                        Inventory targetInv;
-                        if (args.length == 3) {
-                            if (args[2].equals("e")) {
-                                player.openInventory(target.getEnderChest());
-                            }
-                        } else {
-                            player.openInventory(target.getInventory());
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         ChatColor color = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(player).getColor();
-        String deathSpecialMessage = "";
         String[] possibleMessages = new String[]{
                 "#player seems to have died",
                 "It seems #player failed his epic mission",
-                "#Another day, and a death for #player",
+                "Another day, and a death for #player",
                 "Look out! Oh, #player died",
                 "OUCH! #player is dead",
                 "Good luck next time #player, You have died",
@@ -90,7 +69,7 @@ public class EventHandlerPlayer implements Listener {
                 "Hey look! #player's items! #player has died"
         };
 
-        deathSpecialMessage = possibleMessages[plugin.getRandom().nextInt(possibleMessages.length)];
+        String deathSpecialMessage = possibleMessages[plugin.getRandom().nextInt(possibleMessages.length)];
 
         plugin.getServer().broadcastMessage(ChatColor.GRAY + deathSpecialMessage.replaceAll("#player", "" + ChatColor.RESET + color + player.getDisplayName() + ChatColor.RESET + ChatColor.GRAY) + ChatColor.RESET + ChatColor.GRAY + " for a total of " + ChatColor.BOLD + ChatColor.RED + (player.getStatistic(Statistic.DEATHS) + 1)+ ChatColor.RESET + ChatColor.GRAY + " deaths.");
         player.sendMessage("Psst! X:" + player.getLocation().getBlockX() + " Y:" + player.getLocation().getBlockY() + " Z:" + player.getLocation().getBlockZ());
