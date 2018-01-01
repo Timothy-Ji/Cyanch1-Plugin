@@ -16,6 +16,7 @@ public class SQLLite {
                         "UUID TEXT NOT NULL," +
                         "INVENTORY_CONTENTS TEXT," +
                         "ARMOR_CONTENTS TEXT," +
+                        "OFF_HAND TEXT," +
                         "LOCATION TEXT," +
                         "EXPERIENCE FLOAT," +
                         "GAMEMODE TEXT" +
@@ -24,6 +25,7 @@ public class SQLLite {
                         "UUID TEXT NOT NULL," +
                         "INVENTORY_CONTENTS TEXT," +
                         "ARMOR_CONTENTS TEXT," +
+                        "OFF_HAND TEXT" +
                         "LOCATION TEXT," +
                         "EXPERIENCE FLOAT," +
                         "GAMEMODE TEXT" +
