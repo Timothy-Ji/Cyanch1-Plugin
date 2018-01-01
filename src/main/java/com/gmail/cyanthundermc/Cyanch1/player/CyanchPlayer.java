@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 public class CyanchPlayer {
     private CyanchPlugin plugin = CyanchPlugin.INSTANCE;
 
+    private Player player;
+
     public CyanchPlayer(Player player) {
         this.player = player;
     }
-
-    private Player player;
 
     public Player bukkit() {
         return player;
