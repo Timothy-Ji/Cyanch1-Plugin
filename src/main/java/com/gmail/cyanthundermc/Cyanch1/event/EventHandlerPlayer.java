@@ -1,93 +1,128 @@
 package com.gmail.cyanthundermc.Cyanch1.event;
 
 import com.gmail.cyanthundermc.Cyanch1.CyanchPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Statistic;
+import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayer;
+import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayers;
+import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorld;
+import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorlds;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.event.world.PortalCreateEvent;
 
 public class EventHandlerPlayer implements Listener {
 
     private CyanchPlugin plugin = CyanchPlugin.INSTANCE;
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        if (!player.hasPlayedBefore()) {
-            plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam("Teamless").addPlayer(player);
+        CyanchPlayer player = CyanchPlayers.getCyanchPlayer(event.getPlayer());
+        if (!player.bukkit().hasPlayedBefore()) {
+            plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam("Teamless").addPlayer(player.bukkit());
         }
 
-        ChatColor color = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(player).getColor();
-
-        event.setJoinMessage(ChatColor.DARK_GRAY + "| " + ChatColor.GREEN + ChatColor.BOLD + "Join " + ChatColor.RESET + ChatColor.GRAY + "> " +
-                color + player.getDisplayName());
+        event.setJoinMessage(
+                ChatColor.DARK_GRAY + "| " + ChatColor.GREEN + ChatColor.BOLD + "Join " + ChatColor.GRAY + "> " +
+                player.getColoredName());
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        ChatColor color = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(player).getColor();
+        CyanchPlayer player = CyanchPlayers.getCyanchPlayer(event.getPlayer());
 
         event.setQuitMessage(
-                ChatColor.DARK_GRAY + "| " + ChatColor.RED + ChatColor.BOLD + "Quit " + ChatColor.RESET + ChatColor.GRAY + "> " +
-                color + player.getDisplayName());
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
+                ChatColor.DARK_GRAY + "| " + ChatColor.RED + ChatColor.BOLD + "Quit " + ChatColor.GRAY + "> " +
+                player.getColoredName());
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        ChatColor color = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(player).getColor();
+        CyanchPlayer player = CyanchPlayers.getCyanchPlayer(event.getPlayer());
         event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
-        event.setFormat(plugin.getCyanchPlayer(player).CreateChatFormat("%2$s"));
+        event.setFormat(player.createChatFormat("%2$s"));
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        ChatColor color = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(player).getColor();
-        String[] possibleMessages = new String[]{
-                "#player seems to have died",
-                "It seems #player failed his epic mission",
-                "Another day, and a death for #player",
-                "Look out! Oh, #player died",
-                "OUCH! #player is dead",
-                "Good luck next time #player, You have died",
-                "Too late! You've died #player",
-                "#player, cursed to die, has finally done so",
-                "Haha! #player died",
-                "#player, #player, #player, why must you fail me",
-                "Congrats! On Dying #player",
-                "Hey look! #player's items! #player has died"
-        };
+        CyanchPlayer player = CyanchPlayers.getCyanchPlayer(event.getEntity());
 
-        String deathSpecialMessage = possibleMessages[plugin.getRandom().nextInt(possibleMessages.length)];
+        if (player.getServerWorld() == ServerWorld.SURVIVAL) {
+            String[] possibleMessages = new String[]{
+                    "#player seems to have died",
+                    "It seems #player failed his epic mission",
+                    "Another day, and a death for #player",
+                    "Look out! Oh, #player died",
+                    "OUCH! #player is dead",
+                    "Good luck next time #player, You have died",
+                    "Too late! You've died #player",
+                    "#player, cursed to die, has finally done so",
+                    "Haha! #player died",
+                    "#player, #player, #player, why must you fail me",
+                    "Congrats! On Dying #player",
+                    "Hey look! #player's items! #player has died"
+            };
 
-        plugin.getServer().broadcastMessage(ChatColor.GRAY + deathSpecialMessage.replaceAll("#player", "" + ChatColor.RESET + color + player.getDisplayName() + ChatColor.RESET + ChatColor.GRAY) + ChatColor.RESET + ChatColor.GRAY + " for a total of " + ChatColor.BOLD + ChatColor.RED + (player.getStatistic(Statistic.DEATHS) + 1)+ ChatColor.RESET + ChatColor.GRAY + " deaths.");
-        player.sendMessage("Psst! X:" + player.getLocation().getBlockX() + " Y:" + player.getLocation().getBlockY() + " Z:" + player.getLocation().getBlockZ());
+            String deathSpecialMessage = possibleMessages[plugin.getRandom().nextInt(possibleMessages.length)];
+
+            plugin.getServer().broadcastMessage(ChatColor.GRAY + deathSpecialMessage.replaceAll("#player", "" + ChatColor.RESET + player.getColoredName() + ChatColor.RESET + ChatColor.GRAY) + ChatColor.RESET + ChatColor.GRAY + " for a total of " + ChatColor.BOLD + ChatColor.RED + (player.bukkit().getStatistic(Statistic.DEATHS) + 1) + ChatColor.RESET + ChatColor.GRAY + " deaths.");
+            player.bukkit().sendMessage(ChatColor.GRAY + "Psst! X:" + ChatColor.YELLOW + player.bukkit().getLocation().getBlockX() + ChatColor.GRAY + " Y:" + ChatColor.YELLOW + player.bukkit().getLocation().getBlockY() + ChatColor.GRAY + " Z:" + ChatColor.YELLOW + player.bukkit().getLocation().getBlockZ());
+        }
+    }
+
+    @EventHandler
+    public void OnDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            CyanchPlayer player = CyanchPlayers.getCyanchPlayer((Player) event.getEntity());
+
+            //Prevent Death in Non Survival World!
+            if (!player.isInSurvivalWorld()) {
+                if (player.bukkit().getHealth() - event.getFinalDamage() <= 0) {
+                    event.setCancelled(true);
+                    player.getServerWorld().AnnounceToLocal(player.getColoredName() + " died.");
+
+                    World world = player.bukkit().getWorld();
+
+                    //Make sure spawn has somewhere to land on!
+                    if (world.getBlockAt(world.getSpawnLocation()).isEmpty()) {
+                        world.getBlockAt(world.getSpawnLocation()).setType(Material.GRASS);
+                    }
+                    player.bukkit().teleport(player.bukkit().getWorld().getSpawnLocation());
+                    player.bukkit().setHealth(20);
+                }
+            }
+
+        }
     }
 
     @EventHandler
     public void onBedEnter(PlayerBedEnterEvent event) {
-        Player player = event.getPlayer();
-        ChatColor color = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(player).getColor();
+        CyanchPlayer player = CyanchPlayers.getCyanchPlayer(event.getPlayer());
 
-        plugin.getServer().broadcastMessage(color + player.getDisplayName() + ChatColor.YELLOW + " is in bed.");
+        //Only allow use of bed in survival.
+        if (!player.isInSurvivalWorld()) {
+            event.setCancelled(true);
+            player.getServerWorld().AnnounceToPlayer(player.bukkit(), "You are not allowed to do that in this world!");
+            return;
+        }
+
+        plugin.getServer().broadcastMessage(player.getColoredName() + ChatColor.YELLOW + " is in bed.");
     }
 
     @EventHandler
     public void onBedLeave(PlayerBedLeaveEvent event) {
-        Player player = event.getPlayer();
-        ChatColor color = plugin.getServer().getScoreboardManager().getMainScoreboard().getPlayerTeam(player).getColor();
+        CyanchPlayer player = CyanchPlayers.getCyanchPlayer(event.getPlayer());
 
-        plugin.getServer().broadcastMessage(color + player.getDisplayName() + ChatColor.YELLOW + " is no longer in bed.");
+        plugin.getServer().broadcastMessage(player.getColoredName() + ChatColor.YELLOW + " is no longer in bed.");
+    }
+
+    @EventHandler
+    public void onPortalCreate(PortalCreateEvent event) {
+        //Only allow portals to work in survival
+        if (ServerWorlds.getServerWorld(event.getWorld()) != ServerWorld.SURVIVAL) {
+            event.setCancelled(true);
+        }
     }
 }

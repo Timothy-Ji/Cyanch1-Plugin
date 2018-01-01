@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 public abstract class CyanchCommand implements CommandExecutor {
     protected CyanchPlugin plugin = CyanchPlugin.INSTANCE;
 
-    public boolean IsPlayer(CommandSender sender) {
+    protected boolean IsPlayer(CommandSender sender) {
         return sender instanceof Player;
     }
 
-    public BooleanPlayer PlayerOnly(CommandSender sender) {
+    protected BooleanPlayer PlayerOnly(CommandSender sender) {
         if (IsPlayer(sender)) {
             return new BooleanPlayer(true, (Player) sender);
         } else {
