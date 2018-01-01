@@ -46,7 +46,7 @@ public abstract class CyanchCommand implements CommandExecutor {
             return player;
         }
 
-        public CyanchPlayer GetCyanchPlayer() {
+        public CyanchPlayer getCyanchPlayer() {
             if (aBoolean == false)
                 return null;
             return CyanchPlayers.getCyanchPlayer(player);

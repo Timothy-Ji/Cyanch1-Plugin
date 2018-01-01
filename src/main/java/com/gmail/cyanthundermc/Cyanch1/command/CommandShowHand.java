@@ -17,7 +17,7 @@ public class CommandShowHand extends CyanchCommand {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         BooleanPlayer bp = PlayerOnly(commandSender);
         if (bp.getBoolean()) {
-            CyanchPlayer player = bp.GetCyanchPlayer();
+            CyanchPlayer player = bp.getCyanchPlayer();
             if (player.bukkit().getItemInHand().getType() == null || player.bukkit().getItemInHand().getAmount() == 0) {
                 player.bukkit().sendMessage(ChatColor.RED + "Your main hand is empty!");
             } else {
