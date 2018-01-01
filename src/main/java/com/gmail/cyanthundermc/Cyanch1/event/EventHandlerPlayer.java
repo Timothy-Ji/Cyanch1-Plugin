@@ -5,12 +5,15 @@ import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayer;
 import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayers;
 import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorld;
 import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorlds;
+import net.minecraft.server.v1_12_R1.InventoryEnderChest;
 import org.bukkit.*;
+import org.bukkit.block.EnderChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 
@@ -123,6 +126,17 @@ public class EventHandlerPlayer implements Listener {
         //Only allow portals to work in survival
         if (ServerWorlds.getServerWorld(event.getWorld()) != ServerWorld.SURVIVAL) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        CyanchPlayer player = CyanchPlayers.getCyanchPlayer((Player) event.getPlayer());
+        if (!player.isInSurvivalWorld()) {
+            if (event.getInventory().getHolder() instanceof EnderChest) {
+                event.setCancelled(true);
+                player.getServerWorld().AnnounceToPlayer(player.bukkit(), "You are not allowed to do that in this world!");
+            }
         }
     }
 }
