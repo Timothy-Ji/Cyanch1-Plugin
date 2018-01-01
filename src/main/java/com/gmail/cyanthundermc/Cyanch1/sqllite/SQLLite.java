@@ -14,12 +14,11 @@ public class SQLLite {
         plugin.sqlLib.initializeDatabase(player_database_name,
                 "CREATE TABLE IF NOT EXISTS " + player_db_table_creative_data_name + "(" +
                         "UUID TEXT NOT NULL," +
-                        "HAS_DATA BOOLEAN" +
                         "INVENTORY_CONTENTS TEXT," +
                         "ARMOR_CONTENTS TEXT," +
-                        "GAMEMODE TEXT," +
                         "LOCATION TEXT," +
                         "EXPERIENCE FLOAT" +
+                        "GAMEMODE TEXT," +
                         ");" +
                         "CREATE TABLE IF NOT EXISTS " + player_db_table_survival_data_name + "(" +
                         "UUID TEXT NOT NULL," +
