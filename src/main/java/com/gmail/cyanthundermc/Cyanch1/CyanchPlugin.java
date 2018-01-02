@@ -4,7 +4,9 @@ import com.gmail.cyanthundermc.Cyanch1.command.PluginCommands;
 import com.gmail.cyanthundermc.Cyanch1.event.EventHandlerPlayer;
 import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayer;
 import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayers;
+import com.gmail.cyanthundermc.Cyanch1.sqlite.SQLite;
 import com.pablo67340.SQLiteLib.Main.SQLiteLib;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,6 +28,10 @@ public class CyanchPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventHandlerPlayer(), this);
         sqlLib = SQLiteLib.hookSQLiteLib();
 
+        getServer().createWorld(new WorldCreator("creative"));
+        getServer().createWorld(new WorldCreator("creative_void"));
+
+        SQLite.Init();
         PluginCommands.Init();
     }
 

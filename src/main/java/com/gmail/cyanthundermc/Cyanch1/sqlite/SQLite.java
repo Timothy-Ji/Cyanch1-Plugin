@@ -10,24 +10,28 @@ public class SQLite {
 
     public static void Init() {
         //Player DB
-        String createStatement = "";
-        for (ServerWorld serverWorld : ServerWorld.values()) {
-            createStatement +=
-            "CREATE TABLE IF NOT EXISTS player_" + serverWorld.getDb_table_name() + "(" +
-                    "UUID TEXT NOT NULL," +
-                    "INVENTORY_CONTENTS TEXT," +
-                    "ARMOR_CONTENTS TEXT," +
-                    "OFF_HAND TEXT," +
-                    "LOCATION TEXT," +
-                    "EXPERIENCE FLOAT," +
-                    "GAMEMODE TEXT" +
-                    ");"
-            ;
-        }
         plugin.sqlLib.initializeDatabase(
                 player_database_name,
-                createStatement
+                ""
         );
-
+        for (ServerWorld serverWorld : ServerWorld.values()) {
+            String statement =
+                    "CREATE TABLE IF NOT EXISTS player_" + serverWorld.getDb_table_name() + "(" +
+                            "UUID TEXT PRIMARY KEY NOT NULL," +
+                            "INVENTORY_CONTENTS TEXT," +
+                            "ARMOR_CONTENTS TEXT," +
+                            "OFF_HAND TEXT," +
+                            "LOCATION TEXT," +
+                            "EXPERIENCE FLOAT," +
+                            "HEALTH DOUBLE," +
+                            "FOOD INT," +
+                            "SATURATION FLOAT," +
+                            "FLYING BOOLEAN" +
+                            "GLIDING BOOLEAN" +
+                            "GAMEMODE TEXT" +
+                            ")"
+                    ;
+            plugin.sqlLib.getDatabase(player_database_name).executeStatement(statement);
+        }
     }
 }

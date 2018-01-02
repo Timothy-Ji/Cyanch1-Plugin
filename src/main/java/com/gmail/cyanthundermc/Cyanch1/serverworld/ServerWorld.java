@@ -8,8 +8,16 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 public enum ServerWorld {
-    CREATIVE("creative", ChatColor.YELLOW, "" + ChatColor.YELLOW + ChatColor.BOLD + "Creative " + ChatColor.GRAY + "> " + ChatColor.RESET, "creative_sw_data", GameMode.CREATIVE),
-    SURVIVAL("world", ChatColor.GREEN, "" + ChatColor.GREEN + ChatColor.BOLD + "Survival " +ChatColor.GREEN + " > " + ChatColor.RESET, "survival_sw_data", GameMode.SURVIVAL);
+    CREATIVE("creative",
+            ChatColor.YELLOW,
+            "" + ChatColor.YELLOW + ChatColor.BOLD + "Creative " + ChatColor.GRAY + "> " + ChatColor.RESET,
+            "creative_sw_data",
+            GameMode.CREATIVE),
+    SURVIVAL("world",
+            ChatColor.GREEN,
+            "" + ChatColor.GREEN + ChatColor.BOLD + "Survival " + ChatColor.GRAY + "> " + ChatColor.RESET,
+            "survival_sw_data",
+            GameMode.SURVIVAL);
 
     private String worldName;
     private ChatColor color;

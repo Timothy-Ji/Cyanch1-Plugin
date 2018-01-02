@@ -3,14 +3,14 @@ package com.gmail.cyanthundermc.Cyanch1.player;
 import com.gmail.cyanthundermc.Cyanch1.CyanchPlugin;
 import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorld;
 import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorlds;
-import com.gmail.cyanthundermc.Cyanch1.sqllite.SQLLite;
-import com.gmail.cyanthundermc.Cyanch1.util.LocationSerialization;
+import com.gmail.cyanthundermc.Cyanch1.sqlite.SQLite;
 import com.gmail.cyanthundermc.Cyanch1.util.PlayerSerialization;
 import com.gmail.cyanthundermc.Cyanch1.util.SerializedPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -45,7 +45,7 @@ public class CyanchPlayer {
     }
 
     public String getWorldServerPrefix() {
-        return "" + getServerWorld().getColor() + ("" + getServerWorld().name().charAt(0)).toUpperCase();
+        return "" + getServerWorld().getColor() + ChatColor.BOLD + ("" + getServerWorld().name().charAt(0)).toUpperCase();
     }
 
     public String createChatFormat(String message) {
@@ -74,34 +74,52 @@ public class CyanchPlayer {
         ServerWorld sourceServerWorld = getServerWorld();
 
         //Check if Player has already been in serverWorld.
-        boolean exists = (int) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT EXISTS(SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId().toString(), "UUID") == 0 ? false : true;
+        String exists = (String)plugin.sqlLib.getDatabase(SQLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = '" + getUniqueId().toString() + "'", "UUID");
 
         SerializedPlayer old;
-        if (!exists && !serverWorldPlayerData.containsKey(serverWorld)) {
+        if (exists == null && !serverWorldPlayerData.containsKey(serverWorld)) {
             //Do not get from database!
-            SerializedPlayer empty = new SerializedPlayer(
-                    null,
-                    null,
-                    null,
-                    LocationSerialization.getStringFromLocation(plugin.getServer().getWorld(getServerWorld().getWorldName()).getSpawnLocation()),
-                    0,
-                    null
-            );
+            old = PlayerSerialization.getSerializedPlayerFromPlayer(player);
 
-            old = PlayerSerialization.applySerializedPlayerToPlayer(player, empty);
+            player.getInventory().clear();
+            player.setGameMode(serverWorld.getDefaultGameMode());
+            player.setExp(0);
+            player.setSaturation(5);
+            player.setFoodLevel(20);
+            player.setHealth(20);
+            player.teleport(plugin.getServer().getWorld(serverWorld.getWorldName()).getSpawnLocation());
         } else {
             if (serverWorldPlayerData.containsKey(serverWorld)) {
                 old = PlayerSerialization.applySerializedPlayerToPlayer(player, serverWorldPlayerData.get(serverWorld));
             } else {
                 //get from database.
+                Map<String, List<Object>> results = plugin.sqlLib.getDatabase(SQLite.player_database_name).queryMultipleRows("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = '" + getUniqueId() + "'",
+                        "INVENTORY_CONTENTS",
+                        "ARMOR_CONTENTS",
+                        "OFF_HAND",
+                        "LOCATION",
+                        "EXPERIENCE",
+                        "HEALTH",
+                        "FOOD",
+                        "SATURATION",
+                        "FLYING",
+                        "GLIDING",
+                        "GAMEMODE"
+                        );
                 SerializedPlayer serializedPlayer = new SerializedPlayer(
-                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "INVENTORY_CONTENTS"),
-                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "ARMOR_CONTENTS"),
-                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "OFF_HAND"),
-                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "LOCATION"),
-                        (float) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "EXPERIENCE"),
-                        (String) plugin.sqlLib.getDatabase(SQLLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = " + getUniqueId(), "GAMEMODE")
+                        (String) results.get("INVENTORY_CONTENTS").get(0),
+                        (String) results.get("ARMOR_CONTENTS").get(0),
+                        (String) results.get("OFF_HAND").get(0),
+                        (String) results.get("LOCATION").get(0),
+                        Float.parseFloat(String.valueOf(results.get("EXPERIENCE"))),
+                        (double) results.get("HEALTH").get(0),
+                        (int) results.get("FOOD").get(0),
+                        Float.parseFloat(String.valueOf(results.get("SATURATION"))),
+                        (boolean) results.get("FLYING").get(0),
+                        (boolean) results.get("GLIDING").get(0),
+                        (String) results.get("GAMEMODE").get(0)
                 );
+
 
                 old = PlayerSerialization.applySerializedPlayerToPlayer(player, serializedPlayer);
             }
@@ -110,17 +128,21 @@ public class CyanchPlayer {
         //set to cache & database.
         serverWorldPlayerData.put(sourceServerWorld, old);
 
-        plugin.sqlLib.getDatabase((SQLLite.player_database_name)).executeStatement(
-                "INSERT OR REPLACE INTO player_" + sourceServerWorld.getDb_table_name() + "(UUID, INVENTORY_CONTENTS, ARMOR_CONTENTS, OFF_HAND, LOCATION, EXPERIENCE, GAMEMODE)" +
-                "VALUES (" +
-                        getUniqueId() + "," +
-                        old.getInventory() + "," +
-                        old.getArmor() + "," +
-                        old.getOffhand() + "," +
-                        old.getLocation() + "," +
+        plugin.sqlLib.getDatabase((SQLite.player_database_name)).executeStatement(
+                "INSERT OR REPLACE INTO player_" + sourceServerWorld.getDb_table_name() + "(UUID, INVENTORY_CONTENTS, ARMOR_CONTENTS, OFF_HAND, LOCATION, EXPERIENCE, HEALTH, FOOD, SATURATION, FLYING, GLIDING, GAMEMODE)" +
+                " VALUES(" +
+                        "'" + getUniqueId() + "'," +
+                        "'" + old.getInventory() + "'," +
+                        "'" + old.getArmor() + "'," +
+                        "'" + old.getOffhand() + "'," +
+                        "'" + old.getLocation() + "'," +
                         old.getExperience() + "," +
-                        old.getGameMode() +
-                ");"
+                        old.getHealth() + "," +
+                        old.getFood() + "," +
+                        old.getSaturation() + "," +
+                        old.isFlying() + "," +
+                        old.isGliding() + "," +
+                        "'" + old.getGameMode() + "')"
         );
 
         //welcome!

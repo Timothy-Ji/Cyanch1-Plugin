@@ -46,7 +46,7 @@ public class CommandCreative extends CyanchCommand {
                         str += "]";
                         player.bukkit().sendMessage(str);
                     } else {
-                        ServerWorld.CREATIVE.AnnounceToLocal(ChatColor.GRAY + "Gamemode > " + player.getColoredName() + " is now in " + gameMode.name().toLowerCase() + " mode.");
+                        ServerWorld.CREATIVE.AnnounceToLocal(ChatColor.BLUE + "Gamemode " + ChatColor.GRAY + "> " + player.getColoredName() + ChatColor.YELLOW + " is now in " + gameMode.name().toLowerCase() + " mode.");
                         player.bukkit().setGameMode(gameMode);
                     }
                     return true;
@@ -62,7 +62,7 @@ public class CommandCreative extends CyanchCommand {
                     } else if (player.bukkit() == tpTarget) {
                         player.bukkit().sendMessage("You cannot teleport to yourself!");
                     } else {
-                        ServerWorld.CREATIVE.AnnounceToLocal(ChatColor.GRAY + "Teleport > " + player.getColoredName() + " -> " + CyanchPlayers.getCyanchPlayer(tpTarget).getColoredName());
+                        ServerWorld.CREATIVE.AnnounceToLocal(ChatColor.GOLD + "Teleport " + ChatColor.GRAY + "> " + player.getColoredName() + ChatColor.YELLOW + CyanchPlayers.getCyanchPlayer(tpTarget).getColoredName());
                         player.bukkit().teleport(tpTarget);
                     }
                 }
@@ -76,7 +76,7 @@ public class CommandCreative extends CyanchCommand {
                         float y = Float.parseFloat(strings[2]);
                         float z = Float.parseFloat(strings[3]);
 
-                        ServerWorld.CREATIVE.AnnounceToLocal(ChatColor.GRAY + "Teleport > " + player.getColoredName() + " -> " + x + ", " + y + ", " + z);
+                        ServerWorld.CREATIVE.AnnounceToLocal(ChatColor.GOLD + "Teleport " + ChatColor.GRAY + "> " + player.getColoredName() + ChatColor.YELLOW + " -> " + x + ", " + y + ", " + z);
                         player.bukkit().teleport(new Location(player.bukkit().getWorld(), x, y, z));
                     } catch (Exception e) {
                         player.bukkit().sendMessage("Error.");

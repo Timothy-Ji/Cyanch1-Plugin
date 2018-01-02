@@ -44,5 +44,12 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.pablo.67340</groupId>
+            <artifactId>SQLiteLib</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>D:/SQLiteLib.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

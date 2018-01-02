@@ -16,11 +16,18 @@ public class CommandServerWorld extends CyanchCommand {
             }
 
             for (ServerWorld world : ServerWorld.values()) {
-                if (strings[0].equalsIgnoreCase(world.getWorldName())) {
-                    player.TransferToServerWorld(world);
-                    return true;
+                if (strings[0].equalsIgnoreCase(world.name())) {
+                    if (player.getServerWorld() == world) {
+                        world.AnnounceToPlayer(player.bukkit(), "Your already here!");
+                        return true;
+                    }
+                    else {
+                        player.TransferToServerWorld(world);
+                        return true;
+                    }
                 }
             }
+            return false;
         }
         return true;
     }

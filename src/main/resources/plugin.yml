@@ -1,6 +1,8 @@
 name: CyanchPlugin
 version: 1.0
 main: com.gmail.cyanthundermc.Cyanch1.CyanchPlugin
+depend: [SQLiteLib]
+loadbefore: [SQLiteLib]
 commands:
   showhand:
     description: Reveals item in hand.
@@ -18,7 +20,7 @@ commands:
     usage: /map
   serverworld:
     description: Switch between server worlds!
-    usage: /serverworld <creative, survival>
+    usage: /serverworld <creative/survival>
   creative:
     description: Set of Creative Commands that can only be used in the Creative Server World!
-    usage: /creative tp <target player> OR /creative tp <x> <y> <z> OR /creative gamemode <mode> OR /creative world <flat, void>
+    usage: /creative tp <target player> OR /creative tp <x> <y> <z> OR /creative gamemode <mode> OR /creative world <flat/void>

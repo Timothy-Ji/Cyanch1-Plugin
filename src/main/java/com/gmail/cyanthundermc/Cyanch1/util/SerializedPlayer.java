@@ -6,14 +6,24 @@ public class SerializedPlayer {
     private String offhand;
     private String location;
     private float experience;
+    private double health;
+    private int food;
+    private float saturation;
+    private boolean isFlying;
+    private boolean isGliding;
     private String gameMode;
 
-    public SerializedPlayer(String inventory, String armor, String offhand, String location, float experience, String gameMode) {
+    public SerializedPlayer(String inventory, String armor, String offhand, String location, float experience, double health, int food, float saturation, boolean isFlying, boolean isGliding, String gameMode) {
         this.inventory = inventory;
         this.armor = armor;
         this.offhand = offhand;
         this.location = location;
         this.experience = experience;
+        this.health = health;
+        this.food = food;
+        this.saturation = saturation;
+        this.isFlying = isFlying;
+        this.isGliding = isGliding;
         this.gameMode = gameMode;
     }
 
@@ -35,6 +45,26 @@ public class SerializedPlayer {
 
     public float getExperience() {
         return experience;
+    }
+
+    public double getHealth() {
+        return health;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public float getSaturation() {
+        return saturation;
+    }
+
+    public boolean isFlying() {
+        return isFlying;
+    }
+
+    public boolean isGliding() {
+        return isGliding;
     }
 
     public String getGameMode() {

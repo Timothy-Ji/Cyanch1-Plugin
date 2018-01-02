@@ -4,10 +4,10 @@ import com.gmail.cyanthundermc.Cyanch1.CyanchPlugin;
 import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayer;
 import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayers;
 import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorld;
-import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorlds;
 import net.minecraft.server.v1_12_R1.InventoryEnderChest;
-import org.bukkit.*;
-import org.bukkit.block.EnderChest;
+import org.bukkit.ChatColor;
+import org.bukkit.Statistic;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +15,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.event.world.PortalCreateEvent;
 
 public class EventHandlerPlayer implements Listener {
 
@@ -84,15 +83,13 @@ public class EventHandlerPlayer implements Listener {
             if (!player.isInSurvivalWorld()) {
                 if (player.bukkit().getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    player.getServerWorld().AnnounceToLocal(player.getColoredName() + " died.");
+                    player.getServerWorld().AnnounceToLocal(player.getColoredName() + ChatColor.GRAY + " died.");
 
                     World world = player.bukkit().getWorld();
 
                     //Make sure spawn has somewhere to land on!
-                    if (world.getBlockAt(world.getSpawnLocation()).isEmpty()) {
-                        world.getBlockAt(world.getSpawnLocation()).setType(Material.GRASS);
-                    }
                     player.bukkit().teleport(player.bukkit().getWorld().getSpawnLocation());
+                    player.bukkit().setFlying(true);
                     player.bukkit().setHealth(20);
                 }
             }
@@ -135,7 +132,7 @@ public class EventHandlerPlayer implements Listener {
     public void onInventoryOpen(InventoryOpenEvent event) {
         CyanchPlayer player = CyanchPlayers.getCyanchPlayer((Player) event.getPlayer());
         if (!player.isInSurvivalWorld()) {
-            if (event.getInventory().getHolder() instanceof EnderChest) {
+            if (event.getInventory() instanceof InventoryEnderChest || event.getInventory().equals(player.bukkit().getEnderChest())) {
                 event.setCancelled(true);
                 player.getServerWorld().AnnounceToPlayer(player.bukkit(), "You are not allowed to do that in this world!");
             }
