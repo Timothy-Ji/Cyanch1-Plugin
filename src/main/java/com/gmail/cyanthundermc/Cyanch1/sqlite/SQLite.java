@@ -27,7 +27,7 @@ public class SQLite {
                             "FLYING BOOLEAN," +
                             "GLIDING BOOLEAN," +
                             "GAMEMODE TEXT" +
-                            ")"
+                            ");"
                     ;
             plugin.sqlLib.getDatabase(player_database_name).executeStatement(statement);
         }

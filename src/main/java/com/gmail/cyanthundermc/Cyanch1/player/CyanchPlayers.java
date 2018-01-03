@@ -5,13 +5,17 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class CyanchPlayers {
     private CyanchPlugin plugin = CyanchPlugin.INSTANCE;
 
-    private static final Map<Player, CyanchPlayer> players = new HashMap<>();
+    private static final Map<UUID, CyanchPlayer> players = new HashMap<>();
 
     public static CyanchPlayer getCyanchPlayer(final Player player) {
-        return players.getOrDefault(player, players.put(player, new CyanchPlayer(player)));
+        UUID uuid = player.getUniqueId();
+        if (!players.containsKey(uuid))
+            players.put(uuid, new CyanchPlayer(player));
+        return players.get(uuid);
     }
 }

@@ -21,14 +21,15 @@ public class CyanchPlayer {
     private UUID uuid;
 
     //As Cache:
-    private Map<ServerWorld, SerializedPlayer> serverWorldPlayerData = new HashMap<>();
+    private Map<String, SerializedPlayer> serverWorldPlayerData;
 
     public CyanchPlayer(Player player) {
         this.player = player;
 
         this.uuid = player.getUniqueId();
+        this.serverWorldPlayerData = new HashMap<>();
 
-        player.setPlayerListName(getWorldServerPrefix() + " " + getColoredName());
+        this.player.setPlayerListName(getWorldServerPrefix() + " " + getColoredName());
     }
 
     public Player bukkit() {
@@ -77,8 +78,7 @@ public class CyanchPlayer {
         String exists = (String)plugin.sqlLib.getDatabase(SQLite.player_database_name).queryValue("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = '" + getUniqueId().toString() + "'", "UUID");
 
         SerializedPlayer old;
-        if (exists == null && !serverWorldPlayerData.containsKey(serverWorld)) {
-            //Do not get from database!
+        if (exists == null && !serverWorldPlayerData.containsKey(serverWorld.name())) {
             old = PlayerSerialization.getSerializedPlayerFromPlayer(player);
 
             player.getInventory().clear();
@@ -89,11 +89,11 @@ public class CyanchPlayer {
             player.setHealth(20);
             player.teleport(plugin.getServer().getWorld(serverWorld.getWorldName()).getSpawnLocation());
         } else {
-            if (serverWorldPlayerData.containsKey(serverWorld)) {
-                old = PlayerSerialization.applySerializedPlayerToPlayer(player, serverWorldPlayerData.get(serverWorld));
+            if (serverWorldPlayerData.containsKey(serverWorld.name())) {
+                old = PlayerSerialization.applySerializedPlayerToPlayer(player, serverWorldPlayerData.get(serverWorld.name()));
             } else {
                 //get from database.
-                Map<String, List<Object>> results = plugin.sqlLib.getDatabase(SQLite.player_database_name).queryMultipleRows("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = '" + getUniqueId() + "'",
+                Map<String, List<Object>> results = plugin.sqlLib.getDatabase(SQLite.player_database_name).queryMultipleRows("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = '" + getUniqueId() + "';",
                         "INVENTORY_CONTENTS",
                         "LOCATION",
                         "EXPERIENCE",
@@ -104,16 +104,17 @@ public class CyanchPlayer {
                         "GLIDING",
                         "GAMEMODE"
                         );
+
                 SerializedPlayer serializedPlayer = new SerializedPlayer(
                         (String) results.get("INVENTORY_CONTENTS").get(0),
-                        (String) results.get("LOCATION").get(0),
-                        Float.parseFloat(String.valueOf(results.get("EXPERIENCE"))),
-                        (double) results.get("HEALTH").get(0),
-                        (int) results.get("FOOD").get(0),
-                        Float.parseFloat(String.valueOf(results.get("SATURATION"))),
-                        (boolean) results.get("FLYING").get(0),
-                        (boolean) results.get("GLIDING").get(0),
-                        (String) results.get("GAMEMODE").get(0)
+                        (String) results.get("LOCATION").get(1),
+                        Float.parseFloat(String.valueOf(results.get("EXPERIENCE").get(2))),
+                        (double) results.get("HEALTH").get(3),
+                        (int) results.get("FOOD").get(4),
+                        Float.parseFloat(String.valueOf(results.get("SATURATION").get(5))),
+                        Boolean.parseBoolean(String.valueOf(results.get("FLYING").get(6))),
+                        Boolean.parseBoolean(String.valueOf(results.get("GLIDING").get(7))),
+                        (String) results.get("GAMEMODE").get(8)
                 );
 
 
@@ -122,9 +123,9 @@ public class CyanchPlayer {
         }
 
         //set to cache & database.
-        serverWorldPlayerData.put(sourceServerWorld, old);
+        serverWorldPlayerData.put(sourceServerWorld.name(), old);
 
-        plugin.sqlLib.getDatabase((SQLite.player_database_name)).executeStatement(
+        plugin.sqlLib.getDatabase(SQLite.player_database_name).executeStatement(
                 "INSERT OR REPLACE INTO player_" + sourceServerWorld.getDb_table_name() + "(UUID, INVENTORY_CONTENTS, LOCATION, EXPERIENCE, HEALTH, FOOD, SATURATION, FLYING, GLIDING, GAMEMODE)" +
                 " VALUES(" +
                         "'" + getUniqueId() + "'," +
@@ -134,9 +135,9 @@ public class CyanchPlayer {
                         old.getHealth() + "," +
                         old.getFood() + "," +
                         old.getSaturation() + "," +
-                        old.isFlying() + "," +
-                        old.isGliding() + "," +
-                        "'" + old.getGameMode() + "')"
+                        "'" + old.isFlying() + "'," +
+                        "'" + old.isGliding() + "'," +
+                        "'" + old.getGameMode() + "');"
         );
 
         //welcome!

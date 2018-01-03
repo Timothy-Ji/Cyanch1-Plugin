@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class PlayerSerialization {
     public static SerializedPlayer getSerializedPlayerFromPlayer(Player player) {
-        String serialized_inventory = BukkitSerialization.itemStackArrayToBase64(player.getInventory().getExtraContents());
+        String serialized_inventory = BukkitSerialization.itemStackArrayToBase64(player.getInventory().getContents());
         String serialized_location = LocationSerialization.getStringFromLocation(player.getLocation());
         float serialized_experience = player.getExp();
         double serialized_health = player.getHealth();
@@ -54,6 +54,8 @@ public class PlayerSerialization {
             player.setHealth(serializedPlayer.getHealth());
             player.setFoodLevel(serializedPlayer.getFood());
             player.setSaturation(serializedPlayer.getSaturation());
+            if (player.getAllowFlight() != serializedPlayer.isFlying())
+                player.setAllowFlight(serializedPlayer.isFlying());
             player.setFlying(serializedPlayer.isFlying());
             player.setGliding(serializedPlayer.isGliding());
             GameMode gameMode = GameModeSerialization.getGameModeFromString(serializedPlayer.getGameMode());
