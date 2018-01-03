@@ -24,8 +24,8 @@ public class SQLite {
                             "HEALTH DOUBLE," +
                             "FOOD INT," +
                             "SATURATION FLOAT," +
-                            "FLYING BOOLEAN" +
-                            "GLIDING BOOLEAN" +
+                            "FLYING BOOLEAN," +
+                            "GLIDING BOOLEAN," +
                             "GAMEMODE TEXT" +
                             ")"
                     ;
