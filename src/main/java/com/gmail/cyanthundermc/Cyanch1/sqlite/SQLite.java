@@ -19,8 +19,6 @@ public class SQLite {
                     "CREATE TABLE IF NOT EXISTS player_" + serverWorld.getDb_table_name() + "(" +
                             "UUID TEXT PRIMARY KEY NOT NULL," +
                             "INVENTORY_CONTENTS TEXT," +
-                            "ARMOR_CONTENTS TEXT," +
-                            "OFF_HAND TEXT," +
                             "LOCATION TEXT," +
                             "EXPERIENCE FLOAT," +
                             "HEALTH DOUBLE," +

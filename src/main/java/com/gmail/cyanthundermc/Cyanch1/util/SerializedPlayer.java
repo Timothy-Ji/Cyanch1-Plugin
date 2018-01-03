@@ -2,8 +2,6 @@ package com.gmail.cyanthundermc.Cyanch1.util;
 
 public class SerializedPlayer {
     private String inventory;
-    private String armor;
-    private String offhand;
     private String location;
     private float experience;
     private double health;
@@ -13,10 +11,8 @@ public class SerializedPlayer {
     private boolean isGliding;
     private String gameMode;
 
-    public SerializedPlayer(String inventory, String armor, String offhand, String location, float experience, double health, int food, float saturation, boolean isFlying, boolean isGliding, String gameMode) {
+    public SerializedPlayer(String inventory, String location, float experience, double health, int food, float saturation, boolean isFlying, boolean isGliding, String gameMode) {
         this.inventory = inventory;
-        this.armor = armor;
-        this.offhand = offhand;
         this.location = location;
         this.experience = experience;
         this.health = health;
@@ -29,14 +25,6 @@ public class SerializedPlayer {
 
     public String getInventory() {
         return inventory;
-    }
-
-    public String getArmor() {
-        return armor;
-    }
-
-    public String getOffhand() {
-        return offhand;
     }
 
     public String getLocation() {

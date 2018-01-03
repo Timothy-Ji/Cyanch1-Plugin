@@ -12,13 +12,7 @@ import java.io.IOException;
 
 public class PlayerSerialization {
     public static SerializedPlayer getSerializedPlayerFromPlayer(Player player) {
-        String[] serializedInventory = BukkitSerialization.playerInventoryToBase64(player.getInventory());
-
-        String serialized_inventory = serializedInventory[0];
-        String serialized_armor = serializedInventory[1];
-        String serialized_offhand = BukkitSerialization.itemStackArrayToBase64(new ItemStack[]{
-                player.getInventory().getItemInOffHand()
-        });
+        String serialized_inventory = BukkitSerialization.itemStackArrayToBase64(player.getInventory().getExtraContents());
         String serialized_location = LocationSerialization.getStringFromLocation(player.getLocation());
         float serialized_experience = player.getExp();
         double serialized_health = player.getHealth();
@@ -30,8 +24,6 @@ public class PlayerSerialization {
 
         return new SerializedPlayer(
                 serialized_inventory,
-                serialized_armor,
-                serialized_offhand,
                 serialized_location,
                 serialized_experience,
                 serialized_health,
@@ -56,11 +48,6 @@ public class PlayerSerialization {
         try {
             ItemStack[] inv = BukkitSerialization.itemStackArrayFromBase64(serializedPlayer.getInventory());
             player.getInventory().setContents(inv);
-            ItemStack[] armor = BukkitSerialization.itemStackArrayFromBase64(serializedPlayer.getArmor());
-            player.getInventory().setArmorContents(armor);
-            ItemStack offhand = BukkitSerialization.itemStackArrayFromBase64(serializedPlayer.getOffhand())[0];
-            if (offhand != null)
-                player.getInventory().setItemInOffHand(BukkitSerialization.itemStackArrayFromBase64(serializedPlayer.getOffhand())[0]);
             Location loc = LocationSerialization.getLocationFromString(serializedPlayer.getLocation());
             player.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
             player.setExp(serializedPlayer.getExperience());

@@ -95,8 +95,6 @@ public class CyanchPlayer {
                 //get from database.
                 Map<String, List<Object>> results = plugin.sqlLib.getDatabase(SQLite.player_database_name).queryMultipleRows("SELECT * FROM player_" + serverWorld.getDb_table_name() + " WHERE UUID = '" + getUniqueId() + "'",
                         "INVENTORY_CONTENTS",
-                        "ARMOR_CONTENTS",
-                        "OFF_HAND",
                         "LOCATION",
                         "EXPERIENCE",
                         "HEALTH",
@@ -108,8 +106,6 @@ public class CyanchPlayer {
                         );
                 SerializedPlayer serializedPlayer = new SerializedPlayer(
                         (String) results.get("INVENTORY_CONTENTS").get(0),
-                        (String) results.get("ARMOR_CONTENTS").get(0),
-                        (String) results.get("OFF_HAND").get(0),
                         (String) results.get("LOCATION").get(0),
                         Float.parseFloat(String.valueOf(results.get("EXPERIENCE"))),
                         (double) results.get("HEALTH").get(0),
@@ -133,8 +129,6 @@ public class CyanchPlayer {
                 " VALUES(" +
                         "'" + getUniqueId() + "'," +
                         "'" + old.getInventory() + "'," +
-                        "'" + old.getArmor() + "'," +
-                        "'" + old.getOffhand() + "'," +
                         "'" + old.getLocation() + "'," +
                         old.getExperience() + "," +
                         old.getHealth() + "," +
