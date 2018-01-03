@@ -125,7 +125,7 @@ public class CyanchPlayer {
         serverWorldPlayerData.put(sourceServerWorld, old);
 
         plugin.sqlLib.getDatabase((SQLite.player_database_name)).executeStatement(
-                "INSERT OR REPLACE INTO player_" + sourceServerWorld.getDb_table_name() + "(UUID, INVENTORY_CONTENTS, ARMOR_CONTENTS, OFF_HAND, LOCATION, EXPERIENCE, HEALTH, FOOD, SATURATION, FLYING, GLIDING, GAMEMODE)" +
+                "INSERT OR REPLACE INTO player_" + sourceServerWorld.getDb_table_name() + "(UUID, INVENTORY_CONTENTS, LOCATION, EXPERIENCE, HEALTH, FOOD, SATURATION, FLYING, GLIDING, GAMEMODE)" +
                 " VALUES(" +
                         "'" + getUniqueId() + "'," +
                         "'" + old.getInventory() + "'," +
