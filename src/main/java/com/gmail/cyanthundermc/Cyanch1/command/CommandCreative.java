@@ -62,7 +62,7 @@ public class CommandCreative extends CyanchCommand {
                     } else if (player.bukkit() == tpTarget) {
                         player.bukkit().sendMessage("You cannot teleport to yourself!");
                     } else {
-                        ServerWorld.CREATIVE.AnnounceToLocal(ChatColor.GOLD + "Teleport " + ChatColor.GRAY + "> " + player.getColoredName() + ChatColor.YELLOW + CyanchPlayers.getCyanchPlayer(tpTarget).getColoredName());
+                        ServerWorld.CREATIVE.AnnounceToLocal(ChatColor.GOLD + "Teleport " + ChatColor.GRAY + "> " + player.getColoredName() + ChatColor.YELLOW + " -> " + CyanchPlayers.getCyanchPlayer(tpTarget).getColoredName());
                         player.bukkit().teleport(tpTarget);
                     }
                 }
