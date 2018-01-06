@@ -5,9 +5,7 @@ import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayer;
 import com.gmail.cyanthundermc.Cyanch1.player.CyanchPlayers;
 import com.gmail.cyanthundermc.Cyanch1.serverworld.ServerWorld;
 import net.minecraft.server.v1_12_R1.InventoryEnderChest;
-import org.bukkit.ChatColor;
-import org.bukkit.Statistic;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -90,9 +88,26 @@ public class EventHandlerPlayer implements Listener {
                     World world = player.bukkit().getWorld();
 
                     //Make sure spawn has somewhere to land on!
-                    player.bukkit().teleport(player.bukkit().getWorld().getSpawnLocation());
-                    player.bukkit().setFlying(true);
-                    player.bukkit().setHealth(20);
+                    if (world.getSpawnLocation().getY() < 2) {
+                        Location nLocation = null;
+                        for (int i = 256; i > 0; i--) {
+                            Location kLoc = new Location(world, world.getSpawnLocation().getX(), i, world.getSpawnLocation().getY());
+                            if (kLoc.getBlock().getType() != Material.AIR) {
+                                nLocation = new Location(world, world.getSpawnLocation().getX(), i + 2, world.getSpawnLocation().getY());
+                                break;
+                            }
+                        }
+                        if (nLocation == null) {
+                            world.getBlockAt(0, 63, 0).setType(Material.GLASS);
+                            nLocation = new Location(player.bukkit().getWorld(), 0, 64, 0);
+                        }
+
+                        player.bukkit().teleport(nLocation);
+                    } else {
+                        player.bukkit().teleport(world.getSpawnLocation());
+                    }
+
+                    player.bukkit().setHealth(player.bukkit().getMaxHealth());
                 }
             }
 
