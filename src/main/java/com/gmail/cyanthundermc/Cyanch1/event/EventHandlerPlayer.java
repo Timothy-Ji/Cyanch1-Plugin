@@ -38,6 +38,8 @@ public class EventHandlerPlayer implements Listener {
         event.setQuitMessage(
                 ChatColor.DARK_GRAY + "| " + ChatColor.RED + ChatColor.BOLD + "Quit " + ChatColor.GRAY + "> " +
                 player.getColoredName());
+
+        CyanchPlayers.remove(player.bukkit());
     }
 
     @EventHandler

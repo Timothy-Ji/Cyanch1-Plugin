@@ -18,4 +18,11 @@ public class CyanchPlayers {
             players.put(uuid, new CyanchPlayer(player));
         return players.get(uuid);
     }
+
+    public static void remove(final Player player) {
+        UUID uuid = player.getUniqueId();
+        if (players.containsKey(player.getUniqueId())) {
+            players.remove(player.getUniqueId());
+        }
+    }
 }
